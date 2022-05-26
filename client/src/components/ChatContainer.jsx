@@ -8,6 +8,7 @@ import { getAllMessagesRoute, sendMessageRoute } from "../utils/APIRoutes";
 export default function ChatContainer({ currentChat, currentUser, socket }) {
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
+  const [arrivalMessage, setArrivalMessage] = useState(null);
 
   useEffect(() => {
     const getAllMessages = async () => {
@@ -23,13 +24,14 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
   useEffect(() => {
     if (socket.current) {
       socket.current.on("msg-receive", (data) => {
-        const { from, msg } = data;
-        console.log(from.username, "===", currentChat.username);
-        if (from.username === currentChat.username)
-          setMessages((prev) => [...prev, { fromSelf: false, message: msg }]);
+        setArrivalMessage({
+          from: data.from,
+          fromSelf: false,
+          message: data.msg,
+        });
       });
     }
-  }, [currentChat]);
+  }, []);
 
   const handleSendMsg = async (msg) => {
     const sendMsg = async () => {
@@ -51,6 +53,15 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
     };
     sendMsg();
   };
+
+  useEffect(() => {
+    if (arrivalMessage) {
+      if (arrivalMessage.from.username === currentChat.username) {
+        const message = { fromSelf: false, message: arrivalMessage.message };
+        setMessages((prev) => [...prev, message]);
+      }
+    }
+  }, [arrivalMessage]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -77,9 +88,7 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
           return (
             <div ref={scrollRef} key={index}>
               <div
-                className={`message ${
-                  message.fromSelf ? "sended" : "recieved"
-                }`}
+                className={`message ${message.fromSelf ? "sent" : "recieved"}`}
               >
                 <div className="content ">
                   <p>{message.message}</p>
@@ -96,9 +105,10 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
 
 const Container = styled.div`
   display: grid;
-  grid-template-rows: 10% 80% 10%;
+  grid-template-rows: 12% 73% 15%;
   gap: 0.1rem;
   overflow: hidden;
+  border-radius: 0 15px 0 0;
   @media screen and (min-width: 720px) and (max-width: 1080px) {
     grid-template-rows: 15% 70% 15%;
   }
@@ -107,6 +117,7 @@ const Container = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
+    background-color: #7a9cb5;
     .user-details {
       display: flex;
       align-items: center;
@@ -146,22 +157,22 @@ const Container = styled.div`
         padding: 1rem;
         font-size: 1.1rem;
         border-radius: 1rem;
-        color: #d1d1d1;
+        color: black;
         @media screen and (min-width: 720px) and (max-width: 1080px) {
           max-width: 70%;
         }
       }
     }
-    .sended {
+    .sent {
       justify-content: flex-end;
       .content {
-        background-color: #4f04ff21;
+        background-color: #98e7a4;
       }
     }
     .recieved {
       justify-content: flex-start;
       .content {
-        background-color: #9900ff20;
+        background-color: #bedeec;
       }
     }
   }

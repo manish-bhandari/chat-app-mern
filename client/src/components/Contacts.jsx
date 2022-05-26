@@ -68,19 +68,18 @@ export default Contacts;
 
 const Container = styled.div`
   display: grid;
-  grid-template-rows: 10% 75% 15%;
+  grid-template-rows: 12% 75% 15%;
   overflow: hidden;
-  background-color: #2b3f53;
+  background-color: #1d2325;
+  border-radius: 15px 0 0 15px;
   .brand {
     display: flex;
     align-items: center;
-    gap: 1rem;
     justify-content: center;
-    img {
-      height: 2rem;
-    }
     h3 {
       color: white;
+      font-size: clamp(18px, 2vw, 25px);
+      font-weight: 300;
       text-transform: uppercase;
     }
   }
@@ -89,34 +88,48 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     overflow: auto;
-    gap: 0.8rem;
     &::-webkit-scrollbar {
       width: 0.2rem;
       &-thumb {
-        background-color: #ffffff39;
+        background-color: #72787b;
         width: 0.1rem;
         border-radius: 1rem;
       }
     }
     .contact {
-      background-color: #ffffff34;
+      background-color: #373939;
       min-height: 5rem;
+      @media (max-width: 600px) {
+        min-height: 2rem;
+      }
       cursor: pointer;
-      width: 90%;
+      width: 100%;
       border-radius: 0.2rem;
       padding: 0.4rem;
       display: flex;
       gap: 1rem;
       align-items: center;
       transition: 0.2s ease;
+      border-bottom: 1px solid #72787b;
+      @media (max-width: 600px) {
+        gap: 0.5rem;
+      }
       .avatar {
         img {
           height: 3rem;
+          @media (max-width: 600px) {
+            height: 2rem;
+          }
         }
       }
       .username {
         h3 {
+          font-weight: 300;
+          letter-spacing: 1px;
           color: white;
+          @media (max-width: 600px) {
+            font-size: 12px;
+          }
         }
       }
     }
@@ -125,20 +138,29 @@ const Container = styled.div`
     }
   }
   .current-user {
-    background-color: #22374b;
+    background-color: #3d494d;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 2rem;
+    @media (max-width: 800px) {
+      gap: 0;
+    }
     .avatar {
       img {
         height: 4rem;
         max-inline-size: 100%;
+        @media (max-width: 600px) {
+          height: 3rem;
+        }
       }
     }
     .username {
       h2 {
         color: white;
+        @media (max-width: 800px) {
+          display: none;
+        }
       }
     }
     @media screen and (min-width: 720px) and (max-width: 1080px) {

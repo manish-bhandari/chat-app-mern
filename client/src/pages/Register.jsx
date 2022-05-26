@@ -123,7 +123,6 @@ const FormContainer = styled.div`
   justify-content: center;
   gap: 1rem;
   align-items: center;
-  background-color: #131324;
   .brand {
     display: flex;
     align-items: center;
@@ -133,7 +132,7 @@ const FormContainer = styled.div`
       height: 5rem;
     }
     h1 {
-      color: white;
+      color: var(--primary);
       text-transform: uppercase;
     }
   }
@@ -141,25 +140,24 @@ const FormContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    background-color: #00000076;
     border-radius: 2rem;
     padding: 3rem 5rem;
   }
   input {
-    background-color: transparent;
+    background-color: #cecece;
     padding: 1rem;
-    border: 0.1rem solid #108f82;
+    border: 0;
     border-radius: 0.4rem;
-    color: white;
+    color: black;
     width: 100%;
     font-size: 1rem;
     &:focus {
-      border: 0.1rem solid #108f82;
+      border: 0;
       outline: none;
     }
   }
   button {
-    background-color: #108f82;
+    background-color: var(--primary);
     color: white;
     padding: 1rem 2rem;
     border: none;
@@ -169,16 +167,20 @@ const FormContainer = styled.div`
     font-size: 1rem;
     text-transform: uppercase;
     &:hover {
-      background-color: #25beae;
+      background-color: var(--primary-highlight);
     }
   }
   span {
     color: white;
-    text-transform: uppercase;
+    font-weight: 300;
     a {
-      color: #108f82;
+      color: var(--primary);
       text-decoration: none;
-      font-weight: bold;
+      border-bottom: 1px solid transparent;
+      transition: border 0.2s ease;
+    }
+    a:hover {
+      border-bottom: 1px solid #126db8;
     }
   }
 `;

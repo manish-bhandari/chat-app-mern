@@ -24,10 +24,10 @@ const Button = styled.button`
   align-items: center;
   padding: 0.5rem;
   border-radius: 0.5rem;
-  background-color: #9a86f3;
+  background-color: var(--primary);
   border: none;
   &:hover {
-    background-color: #a99aec;
+    background-color: var(--primary-highlight);
   }
   cursor: pointer;
   svg {
