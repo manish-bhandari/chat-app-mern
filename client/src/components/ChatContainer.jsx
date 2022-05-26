@@ -26,18 +26,17 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
     getAllMessages();
   }, [currentChat]);
 
-  useEffect(() => {}, [currentChat]);
-
   const handleSendMsg = async (msg) => {
     const sendMsg = async () => {
+      socket.current.emit("send-msg", {
+        to: currentChat,
+        from: currentUser,
+        message: msg,
+      });
+
       axios.post(sendMessageRoute, {
         from: currentUser._id,
         to: currentChat._id,
-        message: msg,
-      });
-      socket.current.emit("send-msg", {
-        to: currentChat._id,
-        from: currentUser._id,
         message: msg,
       });
 
@@ -50,11 +49,13 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
 
   useEffect(() => {
     if (socket.current) {
-      socket.current.on("msg-receive", (msg) => {
-        setArrivalMessage({ fromSelf: false, message: msg });
+      socket.current.on("msg-receive", (data) => {
+        const { from, msg } = data;
+        if (from.username === currentChat.username)
+          setArrivalMessage({ fromSelf: false, message: msg });
       });
     }
-  }, []);
+  }, [currentChat]);
 
   useEffect(() => {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
