@@ -8,13 +8,12 @@ import Logout from "./Logout";
 import ChatInput from "./ChatInput";
 import { getAllMessagesRoute, sendMessageRoute } from "../utils/APIRoutes";
 // import { sendMessageRoute, recieveMessageRoute } from "../utils/APIRoutes";
+import { v4 as uuidv4 } from "uuid";
 
 export default function ChatContainer({ currentChat, currentUser, socket }) {
   const [messages, setMessages] = useState([]);
-  const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
-
-  //   const user = JSON.parse(localStorage.getItem("chat-app-user"));
+  const scrollRef = useRef();
 
   useEffect(() => {
     const getAllMessages = async () => {
@@ -36,16 +35,33 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
         to: currentChat._id,
         message: msg,
       });
+      socket.current.emit("send-msg", {
+        to: currentChat._id,
+        from: currentUser._id,
+        message: msg,
+      });
+
+      const msgs = [...messages];
+      msgs.push({ fromSelf: true, message: msg });
+      setMessages(msgs);
     };
     sendMsg();
   };
 
-  useEffect(() => {}, []);
-
-  useEffect(() => {}, [arrivalMessage]);
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("msg-receive", (msg) => {
+        setArrivalMessage({ fromSelf: false, message: msg });
+      });
+    }
+  }, []);
 
   useEffect(() => {
-    console.log(messages);
+    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   return (
@@ -65,10 +81,10 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
         <Logout />
       </div>
       <div className="chat-messages">
-        {messages.map((message) => {
+        {messages.map((message, index) => {
           //key={uuidv4()}
           return (
-            <div ref={scrollRef}>
+            <div ref={scrollRef} key={uuidv4()}>
               <div
                 className={`message ${
                   message.fromSelf ? "sended" : "recieved"
