@@ -1,5 +1,4 @@
-const { default: mongoose } = require("mongoose");
-const mongoos = require("mongoose");
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -21,13 +20,13 @@ const userSchema = new mongoose.Schema({
     min: 8,
   },
   isAvatarImageSet: {
-      type: Boolean,
-      default: false,
+    type: Boolean,
+    default: false,
   },
   avatarImage: {
-      type: String,
-      default: ""
-  }
+    type: String,
+    default: "",
+  },
 });
 
 module.exports = mongoose.model("Users", userSchema);
